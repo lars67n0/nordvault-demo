@@ -1,0 +1,69 @@
+name: SBOM
+
+# Genererer en Software Bill of Materials i bade CycloneDX- og SPDX-format.
+
+on:
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch: 
+
+permissions:
+  contents: read
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # --- CycloneDX (via OWASP cyclonedx-npm) ---
+      - name: Generate CycloneDX SBOM
+        run: |
+          npx --yes @cyclonedx/cyclonedx-npm@latest \
+            --output-format JSON \
+            --output-file sbom.cyclonedx.json
+
+      # --- SPDX (via Anchore syft) ---
+      - name: Generate SPDX SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: spdx-json
+          output-file: sbom.spdx.json
+          
+          upload-artifact: false
+
+      # --- Bestem et sporbart versions-/referencenavn ---
+      - name: Determine SBOM reference
+        id: ref
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "name=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "name=pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # --- Upload begge SBOM'er som et samlet artefakt ---
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ steps.ref.outputs.name }}
+          path: |
+            sbom.cyclonedx.json
+            sbom.spdx.json
+          retention-days: 90
+          if-no-files-found: error
