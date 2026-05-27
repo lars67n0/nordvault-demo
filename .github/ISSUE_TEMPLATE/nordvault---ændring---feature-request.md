@@ -7,29 +7,30 @@ assignees: ''
 
 ---
 
-▶️ Fase 1 – Planlægning og Risikoklassificering
-📋 1. Ændringsbeskrivelse
+<details>
+Fase 1 – Planlægning og Risikoklassificering
+1. Ændringsbeskrivelse
 Formål:
 <!-- Beskriv hvad ændringen skal opnå og hvorfor -->
 Scope:
 <!-- Hvad er inden for og uden for scope -->
 Forretningsmæssig begrundelse:
 
-📋 2. Funktionelle krav
+2. Funktionelle krav
 <!-- Overordnet niveau — fuld specificering sker i Fase 2 -->
 
-[ ]
-[ ]
+- [ ] x
+- [ ] x
 
 
-📋 3. Ikke-funktionelle krav
+3. Ikke-funktionelle krav
 <!-- Ydeevne, skalerbarhed, tilgængelighed, vedligeholdbarhed — markeret som draft -->
 
-[ ]
-[ ]
+- [ ] x
+- [ ] x
 
 
-🔒 4. Indledende sikkerhedskrav
+4. Indledende sikkerhedskrav
 
 ⚠️ Udfyldes af Security Engineer
 
@@ -52,7 +53,7 @@ Relevante sikkerhedsområder:
  Andet:
 
 
-🔒 5. Komponent- og dataflow-oversigt
+5. Komponent- og dataflow-oversigt
 
 ⚠️ Udfyldes af System/Solution Architect
 
@@ -64,11 +65,11 @@ Trust boundary ændringer:
  Ja — beskriv:
 
 
-📋 6. Acceptkriterier (draft)
+6. Acceptkriterier (draft)
 <!-- Markér sikkerhedsrelaterede kriterier med [SEC] — fuld specificering i Fase 2 -->
 #KriterieType1⬜ Funktionel   ⬜ [SEC] Sikkerhed2⬜ Funktionel   ⬜ [SEC] Sikkerhed3⬜ Funktionel   ⬜ [SEC] Sikkerhed
 
-🔒 7. Risikoklassificering
+7. Risikoklassificering
 
 ⚠️ Udfyldes og godkendes af Security Engineer — påsæt label på Issue
 
@@ -76,16 +77,16 @@ NiveauKarakteristikarisk:lowIngen ændringer i sikkerhedsrelevante komponenter, 
 Klassificering: <!-- lav / middel / høj -->
 Begrundelse:
 
-🔒 8. Obligatoriske sikkerhedsaktiviteter i efterfølgende faser
+8. Obligatoriske sikkerhedsaktiviteter i efterfølgende faser
 
 ⚠️ Dokumenteres af Security Engineer som Issue-kommentar
 
 FaseAktivitetObligatoriskFase 2Fuld sikkerhedskravsspecificering⬜ Ja   ⬜ NejFase 3Trusselsmodellering (STRIDE)⬜ Ja   ⬜ NejFase 3Opdateret arkitekturdiagram⬜ Ja   ⬜ NejFase 5Sikkerhedstest og verifikation⬜ Ja   ⬜ Nej
 
-📋 9. Driftsmæssige krav og CI/CD-påvirkning
+9. Driftsmæssige krav og CI/CD-påvirkning
 
 Udfyldes af DevOps/Ops — angiv Ingen påvirkning hvis ikke relevant
-
+</details>
 
 
 
@@ -93,7 +94,7 @@ Udfyldes af DevOps/Ops — angiv Ingen påvirkning hvis ikke relevant
 <details>
 <summary>▶️ <strong>Fase 2 – Krav og Acceptkriterier</strong> &nbsp;⚠️ Fold ud når Fase 1 er godkendt</summary>
 <br>
-📋 1. Funktionelle krav
+1. Funktionelle krav
 
 Udfyldes af Engineering Lead og Product Owner
 Opret child issues og link herunder hvis nødvendigt
