@@ -1,12 +1,18 @@
 name: SBOM
 
 # Genererer en Software Bill of Materials i bade CycloneDX- og SPDX-format.
+# Korer ved hver pull request (fase 4: pipeline-artefakt) og ved release
+# (fase 6: arkiveret og koblet til versionsnummer).
+# Output uploades som GitHub Actions artifacts.
+#
+# BEMAERK: koden ligger i undermappen nordvault-demo/, sa npm-trin korer der
+# (working-directory), og SBOM-vaerktojer peges mod den mappe.
 
 on:
   pull_request:
   release:
     types: [published]
-  workflow_dispatch: 
+  workflow_dispatch: # tillader manuel korsel fra Actions-fanen
 
 permissions:
   contents: read
@@ -24,25 +30,27 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: nordvault-demo/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        working-directory: nordvault-demo
+        run: npm install
 
       # --- CycloneDX (via OWASP cyclonedx-npm) ---
       - name: Generate CycloneDX SBOM
+        working-directory: nordvault-demo
         run: |
           npx --yes @cyclonedx/cyclonedx-npm@latest \
             --output-format JSON \
-            --output-file sbom.cyclonedx.json
+            --output-file ../sbom.cyclonedx.json
 
       # --- SPDX (via Anchore syft) ---
       - name: Generate SPDX SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: .
+          path: nordvault-demo
           format: spdx-json
           output-file: sbom.spdx.json
-          
           upload-artifact: false
 
       # --- Bestem et sporbart versions-/referencenavn ---
