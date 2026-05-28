@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
+// test comment
 
 let db: Database.Database | null = null;
 
