@@ -14,7 +14,7 @@ Closes #
 
 ## Beskrivelse
 
-<!--s Kort: hvad ændrer denne PR, og hvorfor? -->
+<!-- Kort: hvad ændrer denne PR, og hvorfor? -->
 
 
 
