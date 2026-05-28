@@ -27,7 +27,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5 
         with:
-          node-version: 20
+          node-version: 24
+          cache: npm
 
       # npm ci installerer præcis det der står i package-lock.json og fejler
       # hvis lock og manifest ikke matcher. Det er netop det man vil have til

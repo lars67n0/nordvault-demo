@@ -14,7 +14,7 @@
     "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
