@@ -1,0 +1,71 @@
+name: CI
+
+# Bygger, linter og tester nordvault-demo ved hver pull request og ved
+# push til main.
+#
+# Reference: Fase 4 §6.2 - automatiserede sikkerhedsscanninger i CI/CD.
+# Selvom dette workflow primært handler om kvalitet (build, lint, test),
+# fungerer det som en required status check via branch protection
+# (Fase 4 §8), på linje med CodeQL og dependency-review. Det er hele
+# pointen med enforcement-laget: kontrollerne er ikke rådgivende,
+# de blokerer merge.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Principle of least privilege: workflowet skal kun læse kildekoden.
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Build, lint og test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # npm ci installerer strengt efter package-lock.json. Hvis lock og
+      # manifest ikke matcher, fejler trinet. Det er den eneste install-
+      # kommando der er egnet til CI — den garanterer reproducerbarhed
+      # og kobler til Fase 4 §6.3 (samme princip som SBOM-genereringen).
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # Build via tsc. Fanger type-fejl og verificerer at dist/ kan
+      # genereres. Adskilt fra test-trinet så det er tydeligt hvilken
+      # gate der eventuelt fejler.
+      - name: Build
+        run: npm run build
+
+      # Tests køres med coverage. Tærsklen på 70 % er konfigureret i
+      # jest.config.js og håndhæves automatisk — Jest fejler hvis
+      # coverage falder under tærsklen.
+      - name: Test with coverage
+        run: npm run test:coverage
+
+      # Coverage uploades som pipeline-artefakt og udgør sporbar evidens
+      # for at testene har kørt. Reference: Fase 4 §6.2.
+      # if: always() betyder at artefaktet uploades selv hvis et tidligere
+      # trin fejlede, så vi kan inspicere coverage på fejlede kørsler.
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ github.run_id }}
+          path: coverage/
+          retention-days: 30
+          if-no-files-found: warn
