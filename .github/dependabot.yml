@@ -10,7 +10,7 @@
 #
 # Hver PR fra Dependabot går gennem de samme required status checks som
 # enhver anden PR — CI, CodeQL, dependency-review — så enforcement-laget
-# fanger alle dependency-ændringer uanset om de er menneske- eller bot-skabte.
+# sfanger alle dependency-ændringer uanset om de er menneske- eller bot-skabte.
 
 version: 2
 
