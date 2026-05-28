@@ -7,7 +7,6 @@ name: SBOM
 # BEMAERK: koden ligger i undermappen nordvault-demo/, sa npm-trin korer der
 # (working-directory), og SBOM-vaerktojer peges mod den mappe.
 # TEST KOMMENTAR
-
 on:
   pull_request:
   release:
@@ -23,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5 
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5 
         with:
           node-version: 20
 
@@ -66,7 +65,7 @@ jobs:
 
       # --- Upload begge SBOM'er som ét samlet artefakt ---
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sbom-${{ steps.ref.outputs.name }}
           path: |
