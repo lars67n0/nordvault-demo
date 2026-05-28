@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   risk-gate:
+    name: risk-gate
     runs-on: ubuntu-latest
     steps:
       - name: Evaluate risk classification and required approvals
