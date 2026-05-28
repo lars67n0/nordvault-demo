@@ -36,7 +36,6 @@ jobs:
 
       # --- CycloneDX (via OWASP cyclonedx-npm) ---
       - name: Generate CycloneDX SBOM
-        working-directory: nordvault-demo
         run: |
           npx --yes @cyclonedx/cyclonedx-npm@latest \
             --output-format JSON \
