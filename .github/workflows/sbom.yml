@@ -1,18 +1,15 @@
 name: SBOM
 
-# Genererer en Software Bill of Materials i bade CycloneDX- og SPDX-format.
-# Korer ved hver pull request (fase 4: pipeline-artefakt) og ved release
-# (fase 6: arkiveret og koblet til versionsnummer).
+# Genererer en Software Bill of Materials i både CycloneDX- og SPDX-format.
+# Kører ved hver pull request (Fase 4 §6.3: pipeline-artefakt) og ved release
+# (Fase 6 §6.6: arkiveret og koblet til versionsnummer).
 # Output uploades som GitHub Actions artifacts.
-#
-# BEMAERK: koden ligger i undermappen nordvault-demo/, sa npm-trin korer der
-# (working-directory), og SBOM-vaerktojer peges mod den mappe.
 
 on:
   pull_request:
   release:
     types: [published]
-  workflow_dispatch: # tillader manuel korsel fra Actions-fanen
+  workflow_dispatch: # tillader manuel kørsel fra Actions-fanen
 
 permissions:
   contents: read
@@ -30,23 +27,24 @@ jobs:
         with:
           node-version: 20
 
+      # npm ci installerer præcis det der står i package-lock.json og fejler
+      # hvis lock og manifest ikke matcher. Det er netop det man vil have til
+      # en SBOM: det vi scanner er det vi har låst (Fase 4 §6.3).
       - name: Install dependencies
-        working-directory: nordvault-demo
-        run: npm install
+        run: npm ci
 
       # --- CycloneDX (via OWASP cyclonedx-npm) ---
       - name: Generate CycloneDX SBOM
-        working-directory: nordvault-demo
         run: |
           npx --yes @cyclonedx/cyclonedx-npm@latest \
             --output-format JSON \
-            --output-file ../sbom.cyclonedx.json
+            --output-file sbom.cyclonedx.json
 
       # --- SPDX (via Anchore syft) ---
       - name: Generate SPDX SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: nordvault-demo
+          path: .
           format: spdx-json
           output-file: sbom.spdx.json
           upload-artifact: false
@@ -63,7 +61,7 @@ jobs:
             echo "name=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
           fi
 
-      # --- Upload begge SBOM'er som et samlet artefakt ---
+      # --- Upload begge SBOM'er som ét samlet artefakt ---
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v4
         with:
