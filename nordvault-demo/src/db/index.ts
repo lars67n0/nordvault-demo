@@ -2,6 +2,8 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
+// Singleton instance of the database connection
+
 let db: Database.Database | null = null;
 
 export function getDatabase(): Database.Database {
