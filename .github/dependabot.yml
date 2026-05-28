@@ -1,0 +1,61 @@
+# Dependabot-konfiguration for nordvault-demo.
+#
+# Reference:
+#   Fase 4 §6.2 - SCA og afhængighedsscanning via Dependabot.
+#   Fase 7 §6.3 - Håndtering af Dependabot-alerts og afhængighedsopdateringer.
+#
+# Dependabot åbner pull requests for både:
+#   1. Almindelige versions-opdateringer (defineret her)
+#   2. Sikkerhedsopdateringer (aktiveres separat i Settings → Code security)
+#
+# Hver PR fra Dependabot går gennem de samme required status checks som
+# enhver anden PR — CI, CodeQL, dependency-review — så enforcement-laget
+# fanger alle dependency-ændringer uanset om de er menneske- eller bot-skabte.
+
+version: 2
+
+updates:
+  # ────────────────────────────────────────────────────────
+  # npm-afhængigheder (applikationskoden)
+  # ────────────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Copenhagen"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    # Grupperer minor- og patch-opdateringer pr. dependency-type for at
+    # reducere PR-støj. Major-opdateringer holdes individuelle, fordi de
+    # kan have breaking changes der kræver separat vurdering.
+    groups:
+      production-deps-minor-patch:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-deps-minor-patch:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ────────────────────────────────────────────────────────
+  # GitHub Actions-versioner (CI/CD-supply chain)
+  # ────────────────────────────────────────────────────────
+  # Holder workflow-actions opdaterede så vi ikke ender med EOL'd actions
+  # — præcis det problem vi netop løste manuelt med Node 20-deprecation.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Copenhagen"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(ci)"
