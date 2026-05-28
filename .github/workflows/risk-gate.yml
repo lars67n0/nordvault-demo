@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Evaluate risk classification and required approvals
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             // Security Engineer-rollen. Udskift med faktiske GitHub-brugernavne.
