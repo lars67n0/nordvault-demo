@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import { getDatabase } from '../db';
 import { loginSchema } from '../utils/validation';
 
+// yes yes
+
 const router = Router();
 
 interface UserRow {
