@@ -1,0 +1,68 @@
+name: Risk Gate
+on:
+  pull_request:
+    types: [opened, edited, labeled, unlabeled, synchronize]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+permissions:
+  pull-requests: read
+  contents: read
+
+jobs:
+  risk-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Evaluate risk classification and required approvals
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Security Engineer-rollen. Udskift med faktiske GitHub-brugernavne.
+            const SECURITY_ENGINEERS = ['lars67n0', 'Lohse-Git'];
+
+            const pr = context.payload.pull_request
+              ?? (await github.rest.pulls.get({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: context.issue.number
+                 })).data;
+
+            // 1. Find risk-labels (fase 1: klassificering er obligatorisk)
+            const labels = pr.labels.map(l => l.name.toLowerCase());
+            const riskLabels = labels.filter(l => l.startsWith('risk:'));
+
+            if (riskLabels.length === 0) {
+              core.setFailed('Ingen risikoklassificering sat. En Risk:Low/Medium/High-label er påkrævet (fase 1).');
+              return;
+            }
+            if (riskLabels.length > 1) {
+              core.setFailed(`Flere risk-labels sat (${riskLabels.join(', ')}). Præcis én er påkrævet.`);
+              return;
+            }
+
+            const risk = riskLabels[0];  // altid lowercase, fx "risk:low"
+            core.info(`Risikoklassificering: ${risk}`);
+
+            // 2. Lav risiko: ingen yderligere krav (proportionalitet, fase 4)
+            if (risk === 'risk:low') {
+              core.info('Lav risiko: sikkerhedsreview fra Security Engineer ikke påkrævet.');
+              return;
+            }
+
+            // 3. Middel/høj risiko: kræv godkendelse fra en Security Engineer (fase 4)
+            const reviews = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const approvedBySecurity = reviews.data.some(
+              r => r.state === 'APPROVED' && SECURITY_ENGINEERS.includes(r.user.login)
+            );
+
+            if (!approvedBySecurity) {
+              core.setFailed(`${risk} kræver godkendelse fra en Security Engineer inden merge (fase 4).`);
+              return;
+            }
+
+            core.info('Security Engineer-godkendelse bekræftet. Risk gate bestået.');
