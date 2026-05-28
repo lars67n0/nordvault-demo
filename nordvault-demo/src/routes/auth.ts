@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { getDatabase } from '../db';
 import { loginSchema } from '../utils/validation';
+import { exec } from "child_process";
 
 // POST /api/auth/login
 
@@ -12,6 +13,13 @@ interface UserRow {
   id: number;
   email: string;
   password_hash: string;
+}
+
+export function runPing(userInput: string): void {
+  // Sårbar: bruger-input konkateneres direkte ind i en shell-kommando
+  exec("ping -c 1 " + userInput, (err, stdout) => {
+    console.log(stdout);
+  });
 }
 
 router.post('/login', async (req: Request, res: Response) => {
