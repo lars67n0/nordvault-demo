@@ -1,0 +1,53 @@
+# NordVault CODEOWNERS
+#
+# Reference: Fase 4 §8 - required reviewers / lagdelt enforcement
+# Reference: Fase 4 §6.5 - sikkerhedsfokuseret code review ved middel/høj risiko
+#
+# CODEOWNERS knytter rolle-ansvar fra fase-dokumenterne til konkrete filer.
+# Når en PR ændrer en fil her, tilføjer GitHub automatisk de udpegede ejere
+# som påkrævede reviewere. Kombineret med branch protection-toggle'en
+# "Require review from Code Owners" bliver kravet håndhævet, ikke informativt.
+#
+# Rollefordeling:
+#   @Lohse-Git  - Engineering Lead (default kode-review)
+#   @lars67n0   - Security Engineer (sikkerhedsrelevant kode)
+#   Begge       - workflow/CI/governance (delt ansvar for supply chain)
+#
+# Syntaks: sidste matching regel vinder. Specifikke regler nederst.
+
+# ──────────────────────────────────────────────────────────────
+# Default — generel kode-review (Engineering Lead-rollen)
+# Reference: Fase 4 §6.5
+# ──────────────────────────────────────────────────────────────
+*   @Lohse-Git
+
+# ──────────────────────────────────────────────────────────────
+# Sikkerhedsrelevante filer (Security Engineer-rollen)
+# Reference: Fase 4 §6.5 - dedikeret sikkerhedsfokuseret code review
+#
+# Disse filer påvirker autentifikation, autorisation, secret-handling
+# eller inputvalidering. Ændringer kræver review fra Security Engineer.
+# ──────────────────────────────────────────────────────────────
+/src/middleware/auth.ts        @lars67n0
+/src/routes/auth.ts            @lars67n0
+/src/config.ts                 @lars67n0
+/src/utils/validation.ts       @lars67n0
+
+# ──────────────────────────────────────────────────────────────
+# CI/CD og workflow-konfiguration (DevOps + Security ansvar)
+# Reference: Fase 4 §6.2 og §8, Fase 7 §6.1
+#
+# Workflow-filer kan omgå selve enforcement-laget hvis de ændres
+# uovervåget. Begge rolleindehavere skal være opmærksomme på ændringer.
+# ──────────────────────────────────────────────────────────────
+/.github/workflows/            @Lohse-Git @lars67n0
+/.github/dependabot.yml        @Lohse-Git @lars67n0
+
+# ──────────────────────────────────────────────────────────────
+# Governance- og policy-filer
+# Selve CODEOWNERS-filen er medejet — så ingen alene kan fjerne
+# den andens ansvar uden modpartens godkendelse.
+# ──────────────────────────────────────────────────────────────
+/.github/CODEOWNERS                  @Lohse-Git @lars67n0
+/.github/PULL_REQUEST_TEMPLATE.md    @Lohse-Git @lars67n0
+/SECURITY.md                          @Lohse-Git @lars67n0
