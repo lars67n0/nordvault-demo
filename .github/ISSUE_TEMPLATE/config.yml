@@ -1,0 +1,8 @@
+# Konfiguration for Issue-templates.
+# blank_issues_enabled: false tvinger brugere til at vælge en af vores
+# strukturerede templates — det er hele pointen med templates.
+blank_issues_enabled: false
+contact_links:
+  - name: Spørgsmål eller diskussion
+    url: https://github.com/lars67n0/nordvault-demo/discussions
+    about: Brug Discussions til spørgsmål der ikke er en konkret ændring eller sårbarhed.

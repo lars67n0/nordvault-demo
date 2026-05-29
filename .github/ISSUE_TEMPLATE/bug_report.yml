@@ -1,0 +1,57 @@
+name: Bug Report
+description: Rapportér en fejl i eksisterende funktionalitet.
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+        For sårbarheder eller sikkerhedsrelaterede fund, brug **Security Finding**-templaten i stedet.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Beskrivelse af fejlen
+      description: Hvad sker der, og hvad burde der ske?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Trin til reproduktion
+      placeholder: |
+        1. Gå til...
+        2. Klik på...
+        3. Se fejl
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Miljø
+      description: Browser, OS, Node-version osv. hvis relevant.
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Vurderet alvorlighed
+      options:
+        - Kritisk — applikationen kan ikke bruges
+        - Høj — vigtig funktionalitet er brudt
+        - Middel — funktionalitet virker, men forkert
+        - Lav — kosmetisk eller mindre besvær
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: security-suspicion
+    attributes:
+      label: Sikkerhedsmistanke
+      description: Hvis nogen af disse er markeret, omklassificeres issue'et til security_finding.
+      options:
+        - label: Bug'en kan udnyttes til uautoriseret adgang
+        - label: Bug'en lækker data der ikke burde være synlige
+        - label: Bug'en omgår en eksisterende sikkerhedskontrol

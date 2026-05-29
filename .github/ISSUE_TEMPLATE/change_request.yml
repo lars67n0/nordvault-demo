@@ -1,0 +1,83 @@
+name: Change Request
+description: Ny feature, ændring eller refaktor. Starter i Fase 1.
+title: "[CHANGE]: "
+labels: ["change-request", "fase-1"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Change Request
+        Denne template operationaliserer **Fase 1: Planlægning og Risikoklassificering**.
+        Reference: Fase 1 §6.1 (Change Description), §6.7 (Risikoklassificering), §6.8 (Sikkerhedsaktivitetsbeslutning).
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Formål og forretningsmæssig begrundelse
+      description: Hvad skal ændres, og hvorfor? (Fase 1 §6.1)
+      placeholder: "Eks: Tilføj rate limiting på login-endpoint for at mitigere credential stuffing-angreb."
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope og afgrænsning
+      description: Hvilke komponenter, services eller filer berøres? Hvad ligger uden for scope?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risikoklassificering
+      description: |
+        Vælg baseret på Fase 1 §6.7. Bestemmer hvilke sikkerhedsaktiviteter der er obligatoriske i de efterfølgende faser.
+      options:
+        - "risk:low — ingen ændringer i sikkerhedsrelevante komponenter"
+        - "risk:medium — ændringer i eksisterende sikkerhedsrelevante flows, integrationer eller adgangskontrol"
+        - "risk:high — ændringer i auth, autorisation, kryptering, trust boundaries eller særligt følsomme personoplysninger"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: security-areas
+    attributes:
+      label: Sikkerhedsrelevans
+      description: Markér de områder der berøres af ændringen (Fase 1 §6.4).
+      options:
+        - label: Autentifikation
+        - label: Autorisation
+        - label: Databehandling / personoplysninger
+        - label: Eksponerede API-endpoints
+        - label: Trust boundaries / integrationer
+        - label: Tredjepartsafhængigheder
+        - label: Ingen af ovenstående
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Indledende acceptkriterier
+      description: Hvordan ved vi at ændringen er færdig? Markér sikkerhedsrelaterede kriterier eksplicit (Fase 1 §6.6, Fase 2 §6.4).
+      placeholder: |
+        - Bruger kan logge ind med korrekt password
+        - [SIKKERHED] Maksimalt 5 fejlede login-forsøg pr. IP pr. minut
+    validations:
+      required: true
+
+  - type: textarea
+    id: components
+    attributes:
+      label: Berørte komponenter og dataflows
+      description: Liste over filer/services/integrationer der ændres (Fase 1 §6.5).
+
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: Obligatoriske aktiviteter (sættes af Security Engineer)
+      description: Udfyldes på baggrund af risikoklassificering (Fase 1 §6.8).
+      options:
+        - label: Trusselsmodel påkrævet (Fase 3 §6.2)
+        - label: Sikkerhedsfokuseret code review påkrævet (Fase 4 §6.5)
+        - label: Sikkerhedsspecifik test påkrævet (Fase 5 §6.3)
+        - label: Security Engineer release-godkendelse påkrævet (Fase 6 §6.3)
