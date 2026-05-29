@@ -1,0 +1,86 @@
+name: Security Finding
+description: Sårbarhed eller sikkerhedsmæssig observation. Starter Fase 7's sårbarhedshåndtering.
+title: "[SECURITY]: "
+labels: ["sikkerhedsfund"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Security Finding
+        Denne template operationaliserer **Fase 7 §6.2: Sårbarhedshåndtering**.
+
+        ⚠️ **Hvis sårbarheden er kritisk og endnu ikke offentlig, brug GitHubs private vulnerability reporting i Security-fanen i stedet** — ikke et almindeligt issue.
+
+  - type: dropdown
+    id: source
+    attributes:
+      label: Kilde
+      description: Hvor blev sårbarheden identificeret? (Fase 7 §5)
+      options:
+        - Dependabot alert
+        - SAST (CodeQL)
+        - SCA (dependency-review)
+        - Manuel code review
+        - Manuel test
+        - Ekstern rapportering
+        - Periodisk gennemgang
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Beskrivelse af sårbarheden
+      description: Hvad er fundet? Hvilken komponent? Hvilken effekt?
+    validations:
+      required: true
+
+  - type: input
+    id: cve
+    attributes:
+      label: CVE-reference (hvis kendt)
+      placeholder: "CVE-2026-xxxxx"
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioritering
+      description: |
+        Baseret på CVSS-score og kontekstuel risikovurdering. Bestemmer svartiden (Fase 7 §6.2).
+      options:
+        - "Kritisk — CVSS 9.0-10.0 eller aktivt udnyttet. Svartid: 72 timer."
+        - "Høj — CVSS 7.0-8.9. Svartid: 14 dage."
+        - "Middel — CVSS 4.0-6.9. Svartid: 90 dage."
+        - "Lav — CVSS 0.1-3.9. Svartid: næste planlagte release."
+    validations:
+      required: true
+
+  - type: input
+    id: cvss
+    attributes:
+      label: CVSS-score (hvis tilgængelig)
+      placeholder: "7.5"
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Berørte komponenter
+      description: Hvilke filer, services eller afhængigheder er berørt?
+    validations:
+      required: true
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Foreslået håndtering
+      description: Rette i koden / opgradere afhængighed / acceptere som restrisiko / eskalere som separat ændring.
+
+  - type: checkboxes
+    id: cra
+    attributes:
+      label: CRA artikel 14-relevans
+      description: Skal denne sårbarhed rapporteres eksternt? (Fase 7 §6.5)
+      options:
+        - label: Sårbarheden er aktivt udnyttet — kræver notifikation inden 24 timer
+        - label: Alvorlig sikkerhedshændelse — kræver opfølgende rapport inden 72 timer
+        - label: Ingen ekstern rapportering påkrævet
