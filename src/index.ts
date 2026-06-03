@@ -21,7 +21,6 @@ app.get('/health', (_req, res) => {
 if (require.main === module) {
   initializeDatabase();
   app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
     console.log(`NordVault demo API listening on port ${PORT}`);
   });
 }
