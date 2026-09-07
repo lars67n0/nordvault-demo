@@ -48,7 +48,7 @@ updates:
   # GitHub Actions-versioner (CI/CD-supply chain)
   # ────────────────────────────────────────────────────────
   # Holder workflow-actions opdaterede så vi ikke ender med EOL'd actions
-  # — præcis det problem vi netop løste manuelt med Node 20-deprecation.
+  # præcis det problem vi netop løste manuelt med Node 20-deprecation.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

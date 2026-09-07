@@ -26,7 +26,6 @@ router.post('/login', async (req: Request, res: Response) => {
     .get(email) as UserRow | undefined;
 
   if (!user) {
-    // Generic error message to avoid user enumeration
     res.status(401).json({ error: 'Invalid credentials' });
     return;
   }
